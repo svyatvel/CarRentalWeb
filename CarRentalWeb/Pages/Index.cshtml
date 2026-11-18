@@ -1,0 +1,200 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Оренда автомобілів";
+}
+
+<section class="hero">
+    <div>
+        <p class="eyebrow">СЕРВІС ОРЕНДИ АВТОМОБІЛІВ</p>
+        <h1>Автомобіль для<br />будь-якої подорожі</h1>
+        <p class="hero-copy">Обирайте автомобіль із перевіреним технічним станом, оформлюйте бронювання онлайн і вирушайте в дорогу.</p>
+    </div>
+</section>
+
+<main class="page-shell">
+    @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+    {
+        <div class="notice notice-error">@Model.ErrorMessage</div>
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.SuccessMessage))
+    {
+        <div class="notice notice-success">@Model.SuccessMessage</div>
+    }
+
+    @if (Model.Agreement is not null)
+    {
+        <section class="agreement-card">
+            <div>
+                <p class="eyebrow">ДОГОВІР ОРЕНДИ</p>
+                <h2>@Model.Agreement.Vehicle.Model</h2>
+                <p>Клієнт: <strong>@Model.Agreement.Client.FullName</strong></p>
+                <p>@Model.Agreement.StartDate.ToString("dd.MM.yyyy") — @Model.Agreement.EndDate.ToString("dd.MM.yyyy")</p>
+            </div>
+            <div class="agreement-price">
+                <span>Вартість</span>
+                <strong>@Model.Agreement.TotalCost.ToString("N0") грн</strong>
+            </div>
+        </section>
+    }
+
+    <section class="bookings-section">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">КОНТРОЛЬ ОРЕНДИ</p>
+                <h2>Хто орендує автомобілі</h2>
+            </div>
+            <span class="booking-count">@Model.Agreements.Count бронювань</span>
+        </div>
+
+        @if (Model.Agreements.Count == 0)
+        {
+            <div class="empty-bookings">Поки що немає бронювань. Оформлені бронювання з’являться тут.</div>
+        }
+        else
+        {
+            <div class="booking-list">
+                @foreach (var booking in Model.Agreements)
+                {
+                    var isCompleted = booking.IsReturned || booking.EndDate.Date < DateTime.Today;
+                    <article class="booking-row">
+                        <div class="booking-person">
+                            <span class="booking-avatar">@booking.Client.FullName.Trim()[0]</span>
+                            <div>
+                                <strong>@booking.Client.FullName</strong>
+                                <span>Клієнт</span>
+                            </div>
+                        </div>
+                        <div class="booking-car">
+                            <strong>@booking.Vehicle.Model</strong>
+                            <span>@booking.Vehicle.Class</span>
+                        </div>
+                        <div class="booking-dates">
+                            <strong>@booking.StartDate.ToString("dd.MM.yyyy") — @booking.EndDate.ToString("dd.MM.yyyy")</strong>
+                            <span>Термін оренди</span>
+                        </div>
+                        <div class="booking-total">
+                            <strong>@booking.TotalCost.ToString("N0") грн</strong>
+                            <span>Сума</span>
+                        </div>
+                        <span class="booking-status @(isCompleted ? "completed" : "active")">
+                            @(isCompleted ? "Завершено" : "Орендується")
+                        </span>
+                    </article>
+                }
+            </div>
+        }
+    </section>
+
+    <section class="booking-card" id="booking">
+        <h2>Забронювати автомобіль</h2>
+        <form method="post" asp-page-handler="Rent">
+            <div class="form-grid">
+                <label>
+                    ПІБ клієнта
+                    <input asp-for="FullName" placeholder="Іваненко Петро Сергійович" required />
+                </label>
+                <label>
+                    Дата народження
+                    <input asp-for="DateOfBirth" type="date" required />
+                </label>
+                <label>
+                    Автомобіль
+                    <select asp-for="VehicleId" required>
+                        <option value="">Оберіть автомобіль</option>
+                        @foreach (var vehicle in Model.Vehicles)
+                        {
+                            <option value="@vehicle.Id">@vehicle.Model — @vehicle.DailyRate.ToString("N0") грн/доба</option>
+                        }
+                    </select>
+                </label>
+                <label>
+                    Початок оренди
+                    <input asp-for="StartDate" type="date" required />
+                </label>
+                <label>
+                    Завершення оренди
+                    <input asp-for="EndDate" type="date" required />
+                </label>
+                <button class="primary-button" type="submit">Оформити бронювання</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="fleet-section">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">НАШ АВТОПАРК</p>
+                <h2>Доступні автомобілі</h2>
+            </div>
+        </div>
+
+        <div class="fleet-grid">
+            @foreach (var vehicle in Model.Vehicles)
+            {
+                <article class="vehicle-card @(vehicle.IsAvailable ? "" : "unavailable")"
+                         role="button"
+                         tabindex="0"
+                         data-id="@vehicle.Id"
+                         data-model="@vehicle.Model"
+                         data-class="@vehicle.Class"
+                         data-price="@vehicle.DailyRate.ToString("N0")"
+                         data-mileage="@vehicle.Mileage.ToString("N0")"
+                         data-transmission="@vehicle.Transmission"
+                         data-drivetrain="@vehicle.Drivetrain"
+                         data-engine="@vehicle.Engine"
+                         data-seats="@vehicle.Seats"
+                         data-fuel="@vehicle.Fuel"
+                         data-description="@vehicle.Description"
+                         data-image="@vehicle.ImageUrl"
+                         data-available="@(vehicle.IsAvailable ? "Вільний" : "Заброньовано")">
+                    <div class="vehicle-image">
+                        <img src="@vehicle.ImageUrl" alt="@vehicle.Model" />
+                        <span class="status">@((vehicle.IsAvailable ? "Вільний" : "Заброньовано"))</span>
+                    </div>
+                    <div class="vehicle-body">
+                        <div>
+                            <p class="vehicle-class">@vehicle.Class.ToString()</p>
+                            <h3>@vehicle.Model</h3>
+                        </div>
+                        <p class="vehicle-meta">Пробіг: <strong>@vehicle.Mileage.ToString("N0") км</strong></p>
+                        <p class="vehicle-rate"><strong>@vehicle.DailyRate.ToString("N0") грн</strong> / доба</p>
+
+                        @if (!vehicle.IsAvailable)
+                        {
+                            <form method="post" asp-page-handler="Return">
+                                <input type="hidden" name="vehicleId" value="@vehicle.Id" />
+                                <button class="secondary-button" type="submit">Повернути автомобіль</button>
+                            </form>
+                        }
+                    </div>
+                </article>
+            }
+        </div>
+    </section>
+</main>
+
+<div class="vehicle-modal" id="vehicleModal" aria-hidden="true">
+    <div class="vehicle-modal-backdrop" data-close-modal></div>
+    <section class="vehicle-modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <button class="modal-close" type="button" aria-label="Закрити" data-close-modal>×</button>
+        <img id="modalImage" src="" alt="" />
+        <div class="modal-details">
+            <p class="eyebrow" id="modalClass"></p>
+            <h2 id="modalTitle"></h2>
+            <p class="modal-description" id="modalDescription"></p>
+            <div class="spec-grid">
+                <div><span>Привід</span><strong id="modalDrivetrain"></strong></div>
+                <div><span>Коробка передач</span><strong id="modalTransmission"></strong></div>
+                <div><span>Двигун</span><strong id="modalEngine"></strong></div>
+                <div><span>Пальне</span><strong id="modalFuel"></strong></div>
+                <div><span>Місць</span><strong id="modalSeats"></strong></div>
+                <div><span>Пробіг</span><strong id="modalMileage"></strong></div>
+            </div>
+            <div class="modal-footer">
+                <strong><span id="modalPrice"></span> грн <small>/ доба</small></strong>
+                <button class="primary-button" type="button" id="modalBookButton">Забронювати</button>
+            </div>
+        </div>
+    </section>
+</div>

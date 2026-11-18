@@ -1,0 +1,14 @@
+C:\Users\vsv05\OneDrive\Desktop\курсач\CarRental\bin\Debug\net10.0\CarRental.exe
+C:\Users\vsv05\OneDrive\Desktop\курсач\CarRental\bin\Debug\net10.0\CarRental.deps.json
+C:\Users\vsv05\OneDrive\Desktop\курсач\CarRental\bin\Debug\net10.0\CarRental.runtimeconfig.json
+C:\Users\vsv05\OneDrive\Desktop\курсач\CarRental\bin\Debug\net10.0\CarRental.dll
+C:\Users\vsv05\OneDrive\Desktop\курсач\CarRental\bin\Debug\net10.0\CarRental.pdb
+C:\Users\vsv05\OneDrive\Desktop\курсач\CarRental\obj\Debug\net10.0\CarRental.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\vsv05\OneDrive\Desktop\курсач\CarRental\obj\Debug\net10.0\CarRental.AssemblyInfoInputs.cache
+C:\Users\vsv05\OneDrive\Desktop\курсач\CarRental\obj\Debug\net10.0\CarRental.AssemblyInfo.cs
+C:\Users\vsv05\OneDrive\Desktop\курсач\CarRental\obj\Debug\net10.0\CarRental.csproj.CoreCompileInputs.cache
+C:\Users\vsv05\OneDrive\Desktop\курсач\CarRental\obj\Debug\net10.0\CarRental.dll
+C:\Users\vsv05\OneDrive\Desktop\курсач\CarRental\obj\Debug\net10.0\refint\CarRental.dll
+C:\Users\vsv05\OneDrive\Desktop\курсач\CarRental\obj\Debug\net10.0\CarRental.pdb
+C:\Users\vsv05\OneDrive\Desktop\курсач\CarRental\obj\Debug\net10.0\CarRental.genruntimeconfig.cache
+C:\Users\vsv05\OneDrive\Desktop\курсач\CarRental\obj\Debug\net10.0\ref\CarRental.dll
